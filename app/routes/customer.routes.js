@@ -19,3 +19,4 @@ module.exports = app => {
   // Create a new Customer
   app.delete("/customers", customers.deleteAll);
 };
+//https://github.com/bezkoder/nodejs-express-mysql/blob/master/README.md
