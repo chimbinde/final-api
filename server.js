@@ -1,7 +1,13 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+var cors = require('cors')
 
 const app = express();
+app.use(cors(
+  { 
+    origin: 'http://localhost:3001'
+  }
+));
 
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
@@ -15,6 +21,18 @@ app.get("/", (req, res) => {
 });
 
 require("./app/routes/customer.routes.js")(app);
+require("./app/routes/pessoa.routes.js")(app);
+require("./app/routes/disciplina.routes.js")(app);
+require("./app/routes/profdisc.routes.js")(app);
+require("./app/routes/alunodisc.routes.js")(app);
+require("./app/routes/avaliacao.routes.js")(app);
+require("./app/routes/questoes.routes.js")(app);
+require("./app/routes/alunoavaliacao.routes.js")(app);
+require("./app/routes/respostas.routes.js")(app);
+require("./app/routes/escolas.routes.js")(app);
+require("./app/routes/pais.routes.js")(app);
+require("./app/routes/provincia.routes.js")(app);
+
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3000;
