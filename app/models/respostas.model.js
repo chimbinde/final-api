@@ -26,26 +26,45 @@ Respostas.create = (newRespostas, result) => {
 };
 
 Respostas.findByIdAval = (iddisc,idpessoa,idavaliacao, vezes, result) => {
-    sql.query(`SELECT * FROM respostas WHERE vezes = ${vezes} and iddisciplinas = ${iddisc} and idpessoa = ${idpessoa} and avaliacao_id = ${idavaliacao}`, (err, res) => {
+    sql.query(`SELECT * FROM respostas WHERE  iddisciplinas = ${iddisc} and idpessoa = ${idpessoa} and avaliacao_id = ${idavaliacao}`, (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(err, null);
         return;
       }
-  
+      /*
+      vezes = ${vezes} and
       if (res.length) {
         console.log("found respostas: ", res[0]);
         result(null, res[0]);
         return;
-      }
-  
-      // not found Respostas with the id
-      result({ kind: "not_found" }, null);
+      } */  
+      console.log("respostas: ", res);
+      result(null, res);
     });
   };
 
 Respostas.findById = (respostasId, result) => {
   sql.query(`SELECT * FROM respostas WHERE id = ${respostasId}`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    if (res.length) {
+      console.log("found respostas: ", res[0]);
+      result(null, res[0]);
+      return;
+    }
+
+    // not found Respostas with the id
+    result({ kind: "not_found" }, null);
+  });
+};
+Respostas.findByIdQuestao = (iddisc,idpessoa,idavaliacao, vezes,idnum, result) => {
+      //app.get("/respostas/findquestao/:iddisc/:idpessoa/:idavaliacao/:vezes/:idnum", respostas.findOneQuestao);
+  sql.query(`SELECT * FROM respostas WHERE questoes_id = ${idnum} and  idpessoa = ${idpessoa} and iddisciplinas = ${iddisc} and avaliacao_id = ${idavaliacao}  and vezes= ${vezes}  `, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);

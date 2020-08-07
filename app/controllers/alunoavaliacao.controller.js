@@ -57,6 +57,23 @@ exports.findOneAval = (req, res) => {
       } else res.send(data);
     });
   };
+// Find a single Alunoavaliacao with a alunoavaliacaoId
+exports.findOnePessoa = (req, res) => {
+  Alunoavaliacao.findById_pessoa(req.params.alunoavaliacaoId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found Alunoavaliacao with id ${req.params.alunoavaliacaoId}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving Alunoavaliacao with id " + req.params.alunoavaliacaoId
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 
 // Find a single Alunoavaliacao with a alunoavaliacaoId
 exports.findOne = (req, res) => {
@@ -108,6 +125,23 @@ exports.update = (req, res) => {
 // Delete a Alunoavaliacao with the specified alunoavaliacaoId in the request
 exports.delete = (req, res) => {
   Alunoavaliacao.remove(req.params.iddisc,req.params.idpessoa,req.params.avaliacao_id,req.params.vezes, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found Alunoavaliacao with id ${req.params.alunoavaliacaoId}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Could not delete Alunoavaliacao with id " + req.params.alunoavaliacaoId
+        });
+      }
+    } else res.send({ message: `Alunoavaliacao was deleted successfully!` });
+  });
+};
+
+// fechar avaliacoes de um aluno
+exports.deleteAval = (req, res) => {
+  Alunoavaliacao.removeAval(req.params.idpessoa, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({

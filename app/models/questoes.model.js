@@ -28,6 +28,17 @@ Questoes.create = (newQuestoes, result) => {
   });
 };
 
+Questoes.findByIdAval = (questoesId, result) => {
+  sql.query(`SELECT * FROM questoes WHERE avaliacao_id = ${questoesId}`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    console.log("questoes: ", res);
+    result(null, res);
+  });
+};
 Questoes.findById = (questoesId, result) => {
   sql.query(`SELECT * FROM questoes WHERE id = ${questoesId}`, (err, res) => {
     if (err) {

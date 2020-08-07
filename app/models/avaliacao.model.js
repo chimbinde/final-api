@@ -50,15 +50,6 @@ Avaliacao.findByIdAval = (idpessoa, iddisc, result) => {
       
     console.log("Avaliacao ", res);
     result(null, res);
-  /*
-      if (res.length) {
-        console.log("found avaliacao: ", res[0]);
-        result(null, res[0]);
-        return;
-      } */
-  
-      // not found Customer with the id
-      //result({ kind: "not_found" }, null);
     });
   };
 
@@ -97,7 +88,6 @@ Avaliacao.updateById = (id, avaliacao, result) => {
     }
   );
 };
-
 Avaliacao.remove = (id, result) => {
   sql.query("DELETE FROM avaliacao WHERE id = ?", id, (err, res) => {
     if (err) {

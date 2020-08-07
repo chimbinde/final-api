@@ -9,6 +9,11 @@ module.exports = app => {
   
     // Retrieve a single questoes with questoesId
     app.get("/questoes/:questoesId", questoes.findOne);
+
+    //app.get("/questoes/pesquisa/:questoesId", questoes.findOnePesquisa);
+
+    // Retrieve a single questoes with questoesId
+    app.get("/questoes/avaliacao/:questoesId", questoes.findOneAval);
   
     // Update a questoes with questoesId
     app.put("/questoes/:questoesId", questoes.update);

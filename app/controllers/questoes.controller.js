@@ -47,6 +47,23 @@ exports.findAll = (req, res) => {
 };
 
 // Find a single Questoes with a questoesId
+exports.findOneAval = (req, res) => {
+  Questoes.findByIdAval(req.params.questoesId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found Questoes with id ${req.params.questoesId}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving Questoes with id " + req.params.questoesId
+        });
+      }
+    } else res.send(data);
+  });
+};
+
+// Find a single Questoes with a questoesId
 exports.findOne = (req, res) => {
   Questoes.findById(req.params.questoesId, (err, data) => {
     if (err) {

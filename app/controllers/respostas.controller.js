@@ -74,7 +74,22 @@ exports.findOneAval = (req, res) => {
     } else res.send(data);
   });
 };
+exports.findOneQuestao= (req, res) => {
+  Respostas.findByIdQuestao(req.params.iddisc,req.params.idpessoa,req.params.idavaliacao, req.params.vezes, req.params.idnum, (err, data) => {
 
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found Respostas with id ${req.params.iddisc}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving Respostas with id " + req.params.iddisc
+        });
+      }
+    } else res.send(data);
+  });
+};
 // Update a Respostas identified by the respostasId in the request
 exports.update = (req, res) => {
   // Validate Request

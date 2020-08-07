@@ -24,7 +24,7 @@ Alunoavaliacao.create = (newAlunoavaliacao, result) => {
 };
 
 Alunoavaliacao.findById = (alunoavaliacaoId, result) => {
-  sql.query(`SELECT * FROM aluno_avaliacao WHERE id = ${alunoavaliacaoId}`, (err, res) => {
+  sql.query(`SELECT * FROM aluno_avaliacao WHERE idpessoa = ${alunoavaliacaoId}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -41,6 +41,18 @@ Alunoavaliacao.findById = (alunoavaliacaoId, result) => {
     result({ kind: "not_found" }, null);
   });
 };
+Alunoavaliacao.findById_pessoa = (alunoavaliacaoId, result) => {
+  sql.query(`SELECT * FROM aluno_avaliacao WHERE idpessoa = ${alunoavaliacaoId}`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    console.log("alunoavaliacao: ", res);
+    result(null, res);
+  });
+};
 
 Alunoavaliacao.findByIdAval = (idpessoa,iddisc, result) => {
     sql.query(`SELECT * FROM aluno_avaliacao WHERE idpessoa = ${idpessoa} and iddisciplinas = ${iddisc}`, (err, res) => {
@@ -51,15 +63,6 @@ Alunoavaliacao.findByIdAval = (idpessoa,iddisc, result) => {
       }
       console.log("alunoavaliacao: ", res);
       result(null, res);
-  /*
-      if (res.length) {
-        console.log("found alunoavaliacao: ", res[0]);
-        result(null, res[0]);
-        return;
-      }
-  */
-      // not found Alunoavaliacao with the id
-     // result({ kind: "not_found" }, null);
     });
   };
 
@@ -99,6 +102,20 @@ Alunoavaliacao.updateById = (iddisc, idpessoa, avaliacao_id,vezes,nota,alunoaval
     }
   );
 };
+
+Alunoavaliacao.removeAval = (idpessoa, result) => {
+  sql.query(`UPDATE aluno_avaliacao SET fechada = 1  WHERE  idpessoa = ${idpessoa} ; `,  (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+
+    console.log(`deleted ${res.affectedRows} alunoavaliacao`);
+    result(null, res);
+  });
+};
+
 
 Alunoavaliacao.remove = (iddisc, idpessoa, avaliacao_id,vezes, result) => {
   sql.query("DELETE FROM aluno_avaliacao WHERE iddisciplinas = ? and idpessoa=? and avaliacao_id=? and vezes=? ", [iddisc, idpessoa, avaliacao_id,vezes], (err, res) => {
