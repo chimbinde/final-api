@@ -21,25 +21,16 @@ Profdisc.create = (newProfdisc, result) => {
 };
 
 Profdisc.findById = (profId, result) => {
-  sql.query(`SELECT * FROM prof_disc WHERE idpessoa = ${profId}`, (err, res) => {
+  sql.query(`SELECT * FROM prof_disc pd, disciplinas d 
+                     WHERE d.iddisciplinas = pd.iddisciplinas 
+                       AND pd.idpessoa = ${profId}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
       return;
     }
-/*
-    if (res.length) {
-      console.log("found Profdisc: ", res[0]);
-      result(null, res[0]);
-      return;
-    }*/
-
     console.log("Profdisc: ", res);
     result(null, res);
-
-    // not found Customer with the id
-    /*
-    result({ kind: "not_found" }, null);*/
   });
 };
 

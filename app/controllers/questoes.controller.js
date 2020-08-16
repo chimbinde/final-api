@@ -48,7 +48,7 @@ exports.findAll = (req, res) => {
 
 // Find a single Questoes with a questoesId
 exports.findOneAval = (req, res) => {
-  Questoes.findByIdAval(req.params.questoesId, (err, data) => {
+  Questoes.findByIdAval(req.params.questoesId,req.params.idpessoa,req.params.iddisciplinas, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({

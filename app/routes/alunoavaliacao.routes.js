@@ -7,6 +7,10 @@ module.exports = app => {
   // Retrieve all Alunoavaliacao
   app.get("/alunoavaliacao", alunoavaliacao.findAll);
 
+  //"/alunoavaliacao/tempo/:ava_iddisciplinas/:ava_iddocente/:ava_id/:vezes/:idpessoa"
+
+  app.get("/alunoavaliacao/tempo/:ava_iddisciplinas/:ava_iddocente/:ava_id/:vezes/:idpessoa", alunoavaliacao.findOneAvalTempo);
+
   // Retrieve a single Alunoavaliacao with alunoavaliacaoId
   app.get("/alunoavaliacao/aluno/:idpessoa/:iddisc", alunoavaliacao.findOneAval);
 

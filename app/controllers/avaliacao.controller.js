@@ -57,6 +57,22 @@ exports.findOne = (req, res) => {
   });
 };
 //bglsdkfngldnfhlvfg
+exports.findOneAvalPessoa = (req, res) => {
+  Avaliacao.findByIdAvalPessoa(req.params.idpessoa, (err, data) => {
+  if (err) {
+    if (err.kind === "not_found") {
+      res.status(404).send({
+        message: `Not found Avaliacao with id ${req.params.idpessoa}.`
+      });
+    } else {
+      res.status(500).send({
+        message: "Error retrieving Avaliacao with id " + req.params.idpessoa
+      });
+    }
+  } else res.send(data);
+});
+};
+//bglsdkfngldnfhlvfg
 exports.findOneAval = (req, res) => {
     Avaliacao.findByIdAval(req.params.idpessoa,req.params.iddisc, (err, data) => {
     if (err) {
@@ -72,6 +88,21 @@ exports.findOneAval = (req, res) => {
     } else res.send(data);
   });
 };
+exports.findOneAvalDisc = (req, res) => {
+  Avaliacao.findByIdAvalDisc(req.params.iddisc, (err, data) => {
+  if (err) {
+    if (err.kind === "not_found") {
+      res.status(404).send({
+        message: `Not found Avaliacao with id ${req.params.iddisc}.`
+      });
+    } else {
+      res.status(500).send({
+        message: "Error retrieving Avaliacao with id " + req.params.iddisc
+      });
+    }
+  } else res.send(data);
+});
+};
 
 
 // Update a Avaliacao identified by the customerId in the request
@@ -85,8 +116,7 @@ exports.update = (req, res) => {
 
   console.log(req.body);
 
-  Avaliacao.updateById(
-    req.params.avaliacaoId,
+  Avaliacao.updateById(req.params.avaliacaoId,req.params.idpessoa,req.params.iddisciplina,
     new Avaliacao(req.body),
     (err, data) => {
       if (err) {
@@ -106,7 +136,7 @@ exports.update = (req, res) => {
 
 // Delete a Customer with the specified customerId in the request
 exports.delete = (req, res) => {
-    Avaliacao.remove(req.params.avaliacaoId, (err, data) => {
+    Avaliacao.remove(req.params.avaliacaoId,req.params.iddisciplinas,req.params.idpessoa, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({

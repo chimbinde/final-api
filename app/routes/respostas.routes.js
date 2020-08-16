@@ -10,7 +10,9 @@ module.exports = app => {
     // Retrieve a single Respostas with respostasId
     app.get("/respostas/:respostasId", respostas.findOne);
 
-    app.get("/respostas/avaliacao/:iddisc/:idpessoa/:idavaliacao/:vezes", respostas.findOneAval);
+
+    //    url = urlBase + 'respostas/avaliacao/' + exame.avaliacao_id + '/' + exame.avaliacao_idpessoa + '/' + exame.avaliacao_iddisciplinas + '/'+exame.vezes + '/'+idestudante;
+    app.get("/respostas/avaliacao/:avaliacao_id/:idpessoa/:iddisciplinas/:vezes/:idestudante", respostas.findOneAval);
 
     app.get("/respostas/findquestao/:iddisciplinas/:idpessoa/:avaliacao_id/:vezes/:questoes_id", respostas.findOneQuestao);
   
@@ -18,7 +20,8 @@ module.exports = app => {
     app.put("/respostas/:iddisc/:idpessoa/:idavaliacao/:vezes/:questoes_id", respostas.update);
   
     // Delete a Respostas with respostasId
-    app.delete("/respostas/:iddisc/:idpessoa/:idavaliacao/:vezes/:questoes_id", respostas.delete);
+    // iddisciplinas + '/' + iddocente + '/' + questoes_id + '/' + vezes + '/' + idpessoa;
+    app.delete("/respostas/:iddisciplinas/:iddocente/:idavaliacao/:questoes_id/:vezes/:idpessoa", respostas.delete);
   
     // Create a new Respostas
     app.delete("/respostas", respostas.deleteAll);

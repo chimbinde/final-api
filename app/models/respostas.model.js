@@ -6,10 +6,14 @@ const Respostas = function(respostas) {
   this.alternativa=respostas.alternativa;
   this.questoes_id=respostas.questoes_id;
   this.vezes=respostas.vezes;
-  this.idpessoa=respostas.idpessoa;
-  this.iddisciplinas=respostas.iddisciplinas;
-  this.avaliacao_id=respostas.avaliacao_id;
 
+  this.questoes_avaliacao_id=respostas.questoes_avaliacao_id;
+  
+  this.questoes_avaliacao_iddisciplinas=respostas.questoes_avaliacao_iddisciplinas;
+
+  this.idaluno=respostas.idaluno;
+
+  this.questoes_avaliacao_idpessoa=respostas.questoes_avaliacao_idpessoa;
 };
 
 Respostas.create = (newRespostas, result) => {
@@ -25,8 +29,14 @@ Respostas.create = (newRespostas, result) => {
   });
 };
 
-Respostas.findByIdAval = (iddisc,idpessoa,idavaliacao, vezes, result) => {
-    sql.query(`SELECT * FROM respostas WHERE  iddisciplinas = ${iddisc} and idpessoa = ${idpessoa} and avaliacao_id = ${idavaliacao}`, (err, res) => {
+Respostas.findByIdAval = (avaliacao_id,idpessoa,iddisciplinas, vezes,idestudante, result) => {
+   //:avaliacao_id/:idpessoa/:iddisciplinas/:vezes/:idestudante"
+    sql.query(`SELECT * FROM respostas 
+                       WHERE questoes_avaliacao_id= ${avaliacao_id} 
+                         and questoes_avaliacao_idpessoa = ${idpessoa} 
+                         and questoes_avaliacao_iddisciplinas = ${iddisciplinas} 
+                         and vezes = ${vezes} 
+                         and idaluno = ${idestudante}`, (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(err, null);
@@ -119,8 +129,16 @@ Respostas.updateById = (iddisc,questoes_id, idpessoa, idavaliacao,vezes
   );
 };
 
-Respostas.remove = (iddisc,questoes_id, idpessoa, idavaliacao,vezes, result) => {
-  sql.query("DELETE FROM respostas WHERE iddisciplinas = ? and questoes_id =? and idpessoa=? and avaliacao_id=? and vezes =?", [iddisc,questoes_id, idpessoa, idavaliacao,vezes], (err, res) => {
+Respostas.remove = (iddisciplinas,iddocente, idavaliacao, questoes_id,vezes,idpessoa, result) => {
+  //:iddisciplinas/:iddocente/:idavaliacao/:questoes_id/:vezes/:idpessoa
+  sql.query(`DELETE FROM respostas 
+                   WHERE questoes_avaliacao_iddisciplinas = ?
+                     and questoes_avaliacao_idpessoa =? 
+                     and questoes_avaliacao_id=? 
+                     and questoes_id=? 
+                     and vezes =?
+                     and idaluno =?
+                     `, [iddisciplinas,iddocente, idavaliacao, questoes_id,vezes,idpessoa], (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -133,7 +151,7 @@ Respostas.remove = (iddisc,questoes_id, idpessoa, idavaliacao,vezes, result) => 
       return;
     }
 
-    console.log("deleted respostas with id: ", iddisc);
+    console.log("deleted respostas with id: ", iddisciplinas);
     result(null, res);
   });
 };

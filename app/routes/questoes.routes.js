@@ -13,7 +13,7 @@ module.exports = app => {
     //app.get("/questoes/pesquisa/:questoesId", questoes.findOnePesquisa);
 
     // Retrieve a single questoes with questoesId
-    app.get("/questoes/avaliacao/:questoesId", questoes.findOneAval);
+    app.get("/questoes/avaliacao/:questoesId/:idpessoa/:iddisciplinas", questoes.findOneAval);
   
     // Update a questoes with questoesId
     app.put("/questoes/:questoesId", questoes.update);

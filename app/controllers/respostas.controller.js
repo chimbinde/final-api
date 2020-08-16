@@ -8,15 +8,15 @@ exports.create = (req, res) => {
       message: "Content can not be empty!"
     });
   }
-
   // Create a Respostas
   const respostas = new Respostas({
     alternativa: req.body.alternativa,
     questoes_id: req.body.questoes_id,
+    questoes_avaliacao_id: req.body.idavaliacao,
+    questoes_avaliacao_idpessoa:req.body.iddocente,
     vezes: req.body.vezes,
-    idpessoa: req.body.idpessoa,
-    iddisciplinas: req.body.iddisciplinas,
-    avaliacao_id: req.body.avaliacao_id
+    idaluno: req.body.idpessoa,
+    questoes_avaliacao_iddisciplinas: req.body.iddisciplinas
   });
 
   // Save Respostas in the database
@@ -60,7 +60,8 @@ exports.findOne = (req, res) => {
 };
 
 exports.findOneAval = (req, res) => {
-  Respostas.findByIdAval(req.params.iddisc,req.params.idpessoa,req.params.idavaliacao, req.params.vezes, (err, data) => {
+  //:avaliacao_id/:idpessoa/:iddisciplinas/:vezes/:idestudante"
+  Respostas.findByIdAval(req.params.avaliacao_id,req.params.idpessoa,req.params.iddisciplinas, req.params.vezes, req.params.idestudante,(err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
@@ -121,9 +122,10 @@ exports.update = (req, res) => {
 };
 
 // Delete a Respostas with the specified respostasId in the request
+//:iddisciplinas/:iddocente/:idavaliacao/:questoes_id/:vezes/:idpessoa
 exports.delete = (req, res) => {
   Respostas.remove( 
-    req.params.iddisc, req.params.questoes_id,  req.params.idpessoa, req.params.idavaliacao, req.params.vezes,
+    req.params.iddisciplinas, req.params.iddocente,  req.params.idavaliacao, req.params.questoes_id, req.params.vezes,req.params.idpessoa,
     (err, data) => {
     if (err) {
       if (err.kind === "not_found") {

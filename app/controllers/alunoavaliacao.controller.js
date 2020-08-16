@@ -13,11 +13,12 @@ exports.create = (req, res) => {
   const alunoavaliacao = new Alunoavaliacao({
     iddisciplinas: req.body.iddisciplinas,
     idpessoa: req.body.idpessoa,
-    avaliacao_id: req.body.avaliacao_id,
     nota: req.body.nota,
+    avaliacao_id: req.body.avaliacao_id,
+    avaliacao_idpessoa:req.body.avaliacao_idpessoa,
+    avaliacao_iddisciplinas:req.body.avaliacao_iddisciplinas,
     vezes: req.body.vezes
   });
-
   // Save Alunoavaliacao in the database
   Alunoavaliacao.create(alunoavaliacao, (err, data) => {
     if (err)
@@ -40,7 +41,22 @@ exports.findAll = (req, res) => {
     else res.send(data);
   });
 };
-
+//"/alunoavaliacao/tempo/:ava_iddisciplinas/:ava_iddocente/:ava_id/:vezes/:idpessoa"
+exports.findOneAvalTempo = (req, res) => {
+  Alunoavaliacao.findByIdAvalTempo(req.params.ava_iddisciplinas,req.params.ava_iddocente,req.params.ava_id,req.params.vezes,req.params.idpessoa, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found Alunoavaliacao with id ${req.params.idpessoa}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving Alunoavaliacao with id " + req.params.idpessoa
+        });
+      }
+    } else res.send(data);
+  });
+};
 // Find a single Alunoavaliacao with a alunoavaliacaoId
 exports.findOneAval = (req, res) => {
     Alunoavaliacao.findByIdAval(req.params.idpessoa,req.params.iddisc, (err, data) => {

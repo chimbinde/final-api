@@ -1,7 +1,7 @@
 const sql = require("./db.js");
 
 // constructor
-const Avaliacao = function(avaliacao) {
+const Avaliacao = function (avaliacao) {
   this.idpessoa = avaliacao.idpessoa;
   this.iddisciplinas = avaliacao.iddisciplinas;
   this.id = avaliacao.id;
@@ -9,13 +9,32 @@ const Avaliacao = function(avaliacao) {
 };
 
 Avaliacao.create = (newAvaliacao, result) => {
-  sql.query("INSERT INTO avaliacao SET ?", newAvaliacao, (err, res) => {
+
+  let sqlstring = `INSERT INTO avaliacao
+  (
+    idpessoa,iddisciplinas,id,datacriada,dataeditada,descricao
+  )
+  VALUES
+  (
+    `+newAvaliacao.idpessoa+`, `+newAvaliacao.iddisciplinas+`, 
+    (
+      ifnull(
+        (select max(a.id) as val from avaliacao  a
+          where a.iddisciplinas= `+newAvaliacao.iddisciplinas+`
+          and a.idpessoa=`+newAvaliacao.idpessoa+`),
+          0)  + 1
+    ),
+     now(),now(),'`+newAvaliacao.descricao+`'
+  );`;
+//console.log(sqlstring);
+  //retrun;
+  sql.query(sqlstring, newAvaliacao, (err, res) => {
+    // sql.query("INSERT INTO avaliacao SET ?", newAvaliacao, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
       return;
     }
-
     console.log("created avaliacao: ", { id: res.insertId, ...newAvaliacao });
     result(null, { id: res.insertId, ...newAvaliacao });
   });
@@ -40,18 +59,43 @@ Avaliacao.findById = (avaliacaoId, result) => {
   });
 };
 
-Avaliacao.findByIdAval = (idpessoa, iddisc, result) => {
-    sql.query(`SELECT * FROM avaliacao WHERE idpessoa = ${idpessoa} and iddisciplinas=${iddisc}`, (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(err, null);
-        return;
-      }
-      
+Avaliacao.findByIdAvalDisc = (iddisc, result) => {
+  sql.query(`SELECT * FROM avaliacao WHERE  iddisciplinas=${iddisc}`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
     console.log("Avaliacao ", res);
     result(null, res);
-    });
-  };
+  });
+};
+
+Avaliacao.findByIdAvalPessoa = (idpessoa, result) => {
+  sql.query(`SELECT * FROM avaliacao a, disciplinas d WHERE d.iddisciplinas = a.iddisciplinas and a.idpessoa = ${idpessoa}`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    console.log("Avaliacao ", res);
+    result(null, res);
+  });
+};
+
+Avaliacao.findByIdAval = (idpessoa, iddisc, result) => {
+  sql.query(`SELECT * FROM avaliacao WHERE idpessoa = ${idpessoa} and iddisciplinas=${iddisc}`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    console.log("Avaliacao ", res);
+    result(null, res);
+  });
+};
 
 Avaliacao.getAll = result => {
   sql.query("SELECT * FROM avaliacao", (err, res) => {
@@ -66,10 +110,14 @@ Avaliacao.getAll = result => {
   });
 };
 
-Avaliacao.updateById = (id, avaliacao, result) => {
-  sql.query(
-    "UPDATE avaliacao SET descricao = ? WHERE id = ?",
-    [avaliacao.descricao, id],
+Avaliacao.updateById = (id, idpessoa, iddisciplinas,avaliacao, result) => {
+
+
+  let stringsql="UPDATE avaliacao SET descricao = '"+avaliacao.descricao+"' WHERE id = "+id+" and idpessoa= "+idpessoa+" and iddisciplinas="+iddisciplinas;
+  //console.log(stringsql);
+  //return;
+  sql.query(stringsql ,
+    [avaliacao.descricao, id, idpessoa,iddisciplinas],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -88,8 +136,8 @@ Avaliacao.updateById = (id, avaliacao, result) => {
     }
   );
 };
-Avaliacao.remove = (id, result) => {
-  sql.query("DELETE FROM avaliacao WHERE id = ?", id, (err, res) => {
+Avaliacao.remove = (id,iddisc, idp, result) => {
+  sql.query("DELETE FROM avaliacao WHERE idpessoa = ? and iddisciplinas =? and id = ?", [idp,iddisc, id], (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);

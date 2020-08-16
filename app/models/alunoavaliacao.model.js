@@ -5,13 +5,32 @@ const Alunoavaliacao = function(alunoavaliacao) {
   this.iddisciplinas = alunoavaliacao.iddisciplinas;
   this.idpessoa = alunoavaliacao.idpessoa;
   this.avaliacao_id = alunoavaliacao.avaliacao_id;
+
   this.nota = alunoavaliacao.nota;
   this.vezes = alunoavaliacao.vezes;
 
-};
+  this.avaliacao_iddisciplinas = alunoavaliacao.avaliacao_iddisciplinas; 
+  this.avaliacao_idpessoa = alunoavaliacao.avaliacao_idpessoa;
 
+};
 Alunoavaliacao.create = (newAlunoavaliacao, result) => {
-  sql.query("INSERT INTO aluno_avaliacao SET ?", newAlunoavaliacao, (err, res) => {
+  let sqlstring=`INSERT INTO aluno_avaliacao(iddisciplinas,idpessoa,avaliacao_id,nota,vezes,inicio,fim,fechada, avaliacao_idpessoa,avaliacao_iddisciplinas)
+                      VALUES(`+newAlunoavaliacao.iddisciplinas+`,`+newAlunoavaliacao.idpessoa+`,`+newAlunoavaliacao.avaliacao_id+`,
+                      0,                     
+                      (
+                        ifnull(
+                          (select max(a.vezes) as val from aluno_avaliacao  a
+                            where a.avaliacao_iddisciplinas= `+newAlunoavaliacao.avaliacao_iddisciplinas+`
+                            and a.avaliacao_idpessoa=`+newAlunoavaliacao.avaliacao_idpessoa+`
+                            and a.idpessoa=`+newAlunoavaliacao.idpessoa+`
+                            and a.avaliacao_id=`+newAlunoavaliacao.avaliacao_id+`),
+                            0)  + 1
+                      ) 
+                      ,now(),null,0,`+newAlunoavaliacao.avaliacao_idpessoa+`,`+newAlunoavaliacao.avaliacao_iddisciplinas+`); `
+
+//console.log(sqlstring);
+//return;
+  sql.query(sqlstring, newAlunoavaliacao, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -42,13 +61,40 @@ Alunoavaliacao.findById = (alunoavaliacaoId, result) => {
   });
 };
 Alunoavaliacao.findById_pessoa = (alunoavaliacaoId, result) => {
-  sql.query(`SELECT * FROM aluno_avaliacao WHERE idpessoa = ${alunoavaliacaoId}`, (err, res) => {
+  const sqlstring =`SELECT * FROM aluno_avaliacao aa, avaliacao a
+                    WHERE a.iddisciplinas=aa.avaliacao_iddisciplinas 
+                      and a.idpessoa=aa.avaliacao_idpessoa
+                      and a.id=aa.avaliacao_id
+                      and aa.idpessoa =${alunoavaliacaoId};`;
+  sql.query(sqlstring, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
       return;
     }
 
+    console.log("alunoavaliacao: ", res);
+    result(null, res);
+  });
+};
+////"/alunoavaliacao/tempo/:ava_iddisciplinas/:ava_iddocente/:ava_id/:vezes/:idpessoa"
+Alunoavaliacao.findByIdAvalTempo = (ava_iddisciplinas,ava_iddocente,ava_id,vezes,idpessoa, result) => {
+     let sqlstring=`select TIMESTAMPDIFF(MINUTE, (select a.inicio 
+                      from aluno_avaliacao a 
+                     where a.avaliacao_iddisciplinas =`+ava_iddisciplinas+` 
+                       and a.avaliacao_idpessoa =`+ava_iddocente+` 
+                       and a.avaliacao_id=`+ava_id+` 
+                       and vezes=`+vezes+` 
+                       and idpessoa=`+idpessoa+`), now() ) as minutos;`;
+
+ // console.log(sqlstring);
+ // return;
+  sql.query(sqlstring, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
     console.log("alunoavaliacao: ", res);
     result(null, res);
   });
