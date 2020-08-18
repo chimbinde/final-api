@@ -16,7 +16,7 @@ module.exports = app => {
     app.get("/questoes/avaliacao/:questoesId/:idpessoa/:iddisciplinas", questoes.findOneAval);
   
     // Update a questoes with questoesId
-    app.put("/questoes/:questoesId", questoes.update);
+    app.put("/questoes/:questoesId/:idpessoa/:iddisciplina/:avaliacao_id", questoes.update);
   
     // Delete a questoes with questoesId
     app.delete("/questoes/:questoesId", questoes.delete);

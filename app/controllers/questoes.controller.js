@@ -18,8 +18,11 @@ exports.create = (req, res) => {
     cotacao: req.body.cotacao,
     idordem: req.body.idordem,
     alternativa1: req.body.alternativa1,
+    idpessoa: req.body.idpessoa,
+    iddisciplina: req.body.iddisciplina,
     alternativa2: req.body.alternativa2,
     alternativa3: req.body.alternativa3,
+    alternativa4: req.body.alternativa4,
     idareatematica: req.body.idareatematica
   });
 
@@ -90,9 +93,9 @@ exports.update = (req, res) => {
   }
 
   console.log(req.body);
-
-  Questoes.updateById(
-    req.params.questoesId,
+//:questoesId/:idpessoa/:iddisciplina/:avaliacao_id"
+  Questoes.updateById(req.params.questoesId,req.params.idpessoa,req.params.iddisciplina,
+    req.params.avaliacao_id,
     new Questoes(req.body),
     (err, data) => {
       if (err) {

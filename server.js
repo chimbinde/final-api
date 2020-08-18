@@ -33,6 +33,7 @@ require("./app/routes/escolas.routes.js")(app);
 require("./app/routes/pais.routes.js")(app);
 require("./app/routes/provincia.routes.js")(app);
 require("./app/routes/categoriadisc.routes.js")(app);
+require("./app/routes/areatematica.routes.js")(app);
 
 
 // set port, listen for requests

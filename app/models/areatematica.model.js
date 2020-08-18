@@ -1,45 +1,41 @@
 const sql = require("./db.js");
 
 // constructor
-const Customer = function(customer) {
-  this.email = customer.email;
-  this.name = customer.name;
-  this.active = customer.active;
+const Areatematica = function(areatematica) {
+  this.idareatematica = areatematica.idareatematica;
+  this.areatematica = areatematica.areatematica;
+  this.iddisciplinas = areatematica.iddisciplinas;
 };
 
-Customer.create = (newCustomer, result) => {
-  sql.query("INSERT INTO areatematica SET ?", newCustomer, (err, res) => {
+Areatematica.create = (newAreatematica, result) => {
+  sql.query("INSERT INTO areatematica SET ?", newAreatematica, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
       return;
     }
 
-    console.log("created customer: ", { id: res.insertId, ...newCustomer });
-    result(null, { id: res.insertId, ...newCustomer });
+    console.log("created areatematica: ", { id: res.insertId, ...newAreatematica });
+    result(null, { id: res.insertId, ...newAreatematica });
   });
 };
 
-Customer.findById = (customerId, result) => {
-  sql.query(`SELECT * FROM areatematica WHERE id = ${customerId}`, (err, res) => {
+Areatematica.findById = (iddisciplinas, result) => {
+  sql.query(`SELECT * FROM areatematica a, disciplinas d WHERE d.iddisciplinas=a.iddisciplinas and a.iddisciplinas = ${iddisciplinas}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
       return;
     }
+    console.log("areatematica: ", res);
+    result(null, res);
 
-    if (res.length) {
-      console.log("found customer: ", res[0]);
-      result(null, res[0]);
-      return;
-    }
-
-    // not found Customer with the id
-    result({ kind: "not_found" }, null);
+    // not found Areatematica with the id
+   // result({ kind: "not_found" }, null);
   });
 };
 
-Customer.getAll = result => {
+Areatematica.getAll = result => {
   sql.query("SELECT * FROM areatematica", (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -52,10 +48,10 @@ Customer.getAll = result => {
   });
 };
 
-Customer.updateById = (id, customer, result) => {
+Areatematica.updateById = (id, areatematica, result) => {
   sql.query(
     "UPDATE areatematica SET email = ?, name = ?, active = ? WHERE id = ?",
-    [customer.email, customer.name, customer.active, id],
+    [areatematica.email, areatematica.name, areatematica.active, id],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -64,18 +60,18 @@ Customer.updateById = (id, customer, result) => {
       }
 
       if (res.affectedRows == 0) {
-        // not found Customer with the id
+        // not found Areatematica with the id
         result({ kind: "not_found" }, null);
         return;
       }
 
-      console.log("updated customer: ", { id: id, ...customer });
-      result(null, { id: id, ...customer });
+      console.log("updated areatematica: ", { id: id, ...areatematica });
+      result(null, { id: id, ...areatematica });
     }
   );
 };
 
-Customer.remove = (id, result) => {
+Areatematica.remove = (id, result) => {
   sql.query("DELETE FROM areatematica WHERE id = ?", id, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -84,17 +80,17 @@ Customer.remove = (id, result) => {
     }
 
     if (res.affectedRows == 0) {
-      // not found Customer with the id
+      // not found Areatematica with the id
       result({ kind: "not_found" }, null);
       return;
     }
 
-    console.log("deleted customer with id: ", id);
+    console.log("deleted areatematica with id: ", id);
     result(null, res);
   });
 };
 
-Customer.removeAll = result => {
+Areatematica.removeAll = result => {
   sql.query("DELETE FROM areatematica", (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -107,4 +103,4 @@ Customer.removeAll = result => {
   });
 };
 
-module.exports = Customer;
+module.exports = Areatematica;
