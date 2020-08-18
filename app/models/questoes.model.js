@@ -19,13 +19,15 @@ const Questoes = function(questoes) {
 };
 
 Questoes.create = (newQuestoes, result) => {
+  let area;
+  if(newQuestoes.idareatematica<=0) area=1;
  let  consulta  = 'INSERT INTO questoes';
       consulta += '(pergunta,resposta,cotacao,idordem,';
       consulta += 'alternativa1,alternativa2,alternativa3,idareatematica,id,';
       consulta += ' alternativa4,avaliacao_id,avaliacao_idpessoa,avaliacao_iddisciplinas)';
       consulta += ' VALUES("'+newQuestoes.pergunta+'","'+newQuestoes.resposta+'",';
       consulta +=' 1,"'+newQuestoes.id+'","'+newQuestoes.alternativa1+'","'+newQuestoes.alternativa2+'",';
-      consulta +=' "'+newQuestoes.alternativa3+'","'+newQuestoes.idareatematica+'",';
+      consulta +=' "'+newQuestoes.alternativa3+'","'+area+'",';
       consulta +=' "'+newQuestoes.id+'","'+newQuestoes.alternativa4+'","'+newQuestoes.avaliacao_id+'",';
       consulta +=' '+newQuestoes.idpessoa+',"'+newQuestoes.iddisciplina+'")';
 
